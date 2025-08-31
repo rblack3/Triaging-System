@@ -4,7 +4,7 @@
   "framework": "nextjs",
   "installCommand": "cd frontend && npm ci",
   "env": {
-    "NEXT_PUBLIC_API_URL": "https://YOUR-PROJECT.railway.app",
-    "NEXT_PUBLIC_WS_URL": "wss://YOUR-PROJECT.railway.app"
+    "NEXT_PUBLIC_API_URL": "https://triaging-system-production.up.railway.app",
+    "NEXT_PUBLIC_WS_URL": "wss://triaging-system-production.up.railway.app"
   }
 }

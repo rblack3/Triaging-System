@@ -36,7 +36,7 @@ triaging-system/
     └── Dockerfile
 ```
 
-## 🚀 Key Features
+## Key Features
 
 - **Simple Role-Based System**: Switch between Customer, Business, and Vendor views
 - **Real-Time Updates**: WebSocket connections for instant messaging
@@ -45,7 +45,7 @@ triaging-system/
 - **Easy Local Setup**: One `docker-compose up` command
 - **Deployed Demo**: Hosted version for interaction testing
 
-## 🛠️ Technology Stack
+## Technology Stack
 
 - **Backend**: Python FastAPI + SQLAlchemy + WebSockets
 - **Frontend**: Next.js 14 + TypeScript + Tailwind CSS
@@ -53,7 +53,7 @@ triaging-system/
 - **Deployment**: Vercel (frontend) + Railway (backend)
 - **Real-time**: Native WebSocket connections
 
-## 📋 Core Workflow
+## Core Workflow
 
 1. **Customer** creates a support ticket
 2. **Business** receives ticket and forwards request to vendor
@@ -61,7 +61,7 @@ triaging-system/
 4. **Business** formulates final response to customer
 5. **Customer** receives resolution
 
-## 🏃‍♂️ Quick Start
+## Quick Start
 
 ```bash
 # Clone and start everything
@@ -78,13 +78,13 @@ docker-compose up --build
 open http://localhost:3000
 ```
 
-## 🌐 Live Demo
+## Live Demo
 
 - **Frontend**: https://triaging-system.vercel.app
 - **API**: https://triaging-system.railway.app
 - **API Docs**: https://your-project.railway.app/docs
 
-## 🎯 Demo Instructions
+## Demo Instructions
 
 1. Visit the live demo
 2. Start as a **Customer** - create a support ticket
@@ -93,11 +93,11 @@ open http://localhost:3000
 5. Back to **Business** - formulate final customer response
 6. Back to **Customer** - see the resolution
 
-## 📡 API Documentation
+## API Documentation
 
 ### Base URLs
 - **Local**: `http://localhost:8000`
-- **Production**: `https://your-backend.railway.app`
+- **Production**: `https://triaging-system-production.up.railway.app`
 
 ### Core Endpoints
 ```
@@ -126,7 +126,7 @@ WS /ws/{user_id}                       # Real-time updates via WebSocket
 4. `vendor_responded` → Vendor provided response
 5. `resolved` → Business sent final response to customer
 
-## 🚀 Production Deployment
+## Production Deployment
 
 ### Environment Variables
 
@@ -141,8 +141,8 @@ CORS_ORIGINS=https://triaging-system.vercel.app
 #### Vercel (Frontend)  
 Set in Vercel dashboard → Settings → Environment Variables:
 ```env
-NEXT_PUBLIC_API_URL=https://your-project.railway.app
-NEXT_PUBLIC_WS_URL=wss://your-project.railway.app
+NEXT_PUBLIC_API_URL=https://triaging-system-production.up.railway.app
+NEXT_PUBLIC_WS_URL=wss://triaging-system-production.up.railway.app
 ```
 
 ### Database Migration (Production)
