@@ -47,4 +47,4 @@ def init_demo_users():
     
     db.commit()
     db.close()
-    print("Demo users created successfully!")
+    print("Demo users created")

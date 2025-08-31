@@ -15,9 +15,9 @@ app = FastAPI(title="Triaging System API", version="1.0.0")
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",  # Local development
-        "https://triaging-system.vercel.app",  # Production frontend
-        "https://*.vercel.app",  # Allow any Vercel preview deployments
+        "http://localhost:3000",                # Local development
+        "https://triaging-system.vercel.app",   # Production frontend
+        "https://*.vercel.app",                 # Allow any Vercel preview deployments
     ],
     allow_credentials=True,
     allow_methods=["*"],
