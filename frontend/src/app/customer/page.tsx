@@ -1,7 +1,7 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { useSearchParams, useRouter } from 'next/navigation'
+import { useSearchParams } from 'next/navigation'
 import { ArrowLeft, Plus, MessageCircle, Clock, CheckCircle } from 'lucide-react'
 import Link from 'next/link'
 
@@ -27,7 +27,6 @@ interface Message {
 
 export default function CustomerPage() {
   const searchParams = useSearchParams()
-  const router = useRouter()
   const userId = parseInt(searchParams.get('userId') || '1')
   
   const [tickets, setTickets] = useState<Ticket[]>([])
@@ -165,7 +164,7 @@ export default function CustomerPage() {
             <div className="space-y-4">
               {tickets.length === 0 ? (
                 <div className="bg-white p-6 rounded-lg text-center text-gray-500">
-                  No tickets yet. Create your first support ticket!
+                  No tickets yet.
                 </div>
               ) : (
                 tickets.map((ticket) => (
@@ -259,7 +258,7 @@ export default function CustomerPage() {
               <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
                 <MessageCircle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Ticket</h3>
-                <p className="text-gray-500">Choose a ticket from the list to view its details and communication history.</p>
+                <p className="text-gray-500">Select a ticket to view details.</p>
               </div>
             )}
           </div>
@@ -279,7 +278,7 @@ export default function CustomerPage() {
                   value={newTicket.title}
                   onChange={(e) => setNewTicket({ ...newTicket, title: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-                  placeholder="Brief description of your issue"
+                  placeholder="Issue title"
                 />
               </div>
               <div>
@@ -288,7 +287,7 @@ export default function CustomerPage() {
                   value={newTicket.description}
                   onChange={(e) => setNewTicket({ ...newTicket, description: e.target.value })}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 h-24"
-                  placeholder="Detailed description of your issue..."
+                  placeholder="Describe your issue..."
                 />
               </div>
             </div>

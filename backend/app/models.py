@@ -12,12 +12,12 @@ class UserRole(enum.Enum):
     VENDOR = "vendor"
 
 class TicketStatus(enum.Enum):
-    OPEN = "open"                    # Customer created ticket
-    BUSINESS_ASSIGNED = "business_assigned"  # Business received ticket
-    VENDOR_CONTACTED = "vendor_contacted"    # Business contacted vendor
-    VENDOR_RESPONDED = "vendor_responded"    # Vendor provided response
-    RESOLVED = "resolved"            # Business responded to customer
-    CLOSED = "closed"               # Ticket closed
+    OPEN = "open"
+    BUSINESS_ASSIGNED = "business_assigned"
+    VENDOR_CONTACTED = "vendor_contacted"
+    VENDOR_RESPONDED = "vendor_responded"
+    RESOLVED = "resolved"
+    CLOSED = "closed"
 
 class User(Base):
     __tablename__ = "users"
@@ -53,7 +53,7 @@ class Message(Base):
     sender_id = Column(Integer, ForeignKey("users.id"))
     recipient_id = Column(Integer, ForeignKey("users.id"), nullable=True)
     content = Column(Text, nullable=False)
-    message_type = Column(String, default="general")  # general, vendor_request, vendor_response, resolution
+    message_type = Column(String, default="general")
     created_at = Column(DateTime, default=datetime.utcnow)
     
     ticket = relationship("Ticket", back_populates="messages")

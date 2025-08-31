@@ -64,8 +64,7 @@ export default function HomePage() {
             Triaging System
           </h1>
           <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-            A streamlined communication system between customers, businesses, and vendors.
-            Select your role to get started with the demo.
+            Connect customers, businesses, and vendors. Choose your role to start.
           </p>
         </div>
 
@@ -83,8 +82,8 @@ export default function HomePage() {
                   <h3 className="text-2xl font-bold capitalize">{user.role}</h3>
                   <p className="text-lg opacity-90">{user.username}</p>
                   <p className="text-sm opacity-75">
-                    {user.role === 'customer' && 'Submit support tickets'}
-                    {user.role === 'business' && 'Manage tickets & vendors'}
+                    {user.role === 'customer' && 'Submit tickets'}
+                    {user.role === 'business' && 'Manage tickets'}
                     {user.role === 'vendor' && 'Respond to requests'}
                   </p>
                 </div>
@@ -108,7 +107,7 @@ export default function HomePage() {
                 <span className="text-2xl font-bold text-green-600">2</span>
               </div>
               <h4 className="font-semibold mb-2">Business</h4>
-              <p className="text-sm text-gray-600">Assigns ticket & contacts vendor</p>
+              <p className="text-sm text-gray-600">Assigns ticket and contacts vendor</p>
             </div>
             <div className="text-center">
               <div className="bg-amber-100 rounded-full p-4 w-16 h-16 mx-auto mb-4 flex items-center justify-center">

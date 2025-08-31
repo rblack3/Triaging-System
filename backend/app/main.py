@@ -11,40 +11,34 @@ from app.websocket_manager import ConnectionManager
 
 app = FastAPI(title="Triaging System API", version="1.0.0")
 
-# CORS middleware for frontend
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        "http://localhost:3000",                # Local development
-        "https://triaging-system.vercel.app",   # Production frontend
-        "https://*.vercel.app",                 # Allow any Vercel preview deployments
+        "http://localhost:3000",
+        "https://triaging-system.vercel.app",
+        "https://*.vercel.app",
     ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],
 )
 
-# WebSocket connection manager
 manager = ConnectionManager()
 
-# Startup event
 @app.on_event("startup")
 async def startup():
     create_tables()
     init_demo_users()
 
-# Health check
 @app.get("/health")
 async def health_check():
     return {"status": "healthy", "timestamp": datetime.utcnow()}
 
-# Get all users (for demo purposes)
 @app.get("/users")
 async def get_users(db: Session = Depends(get_db)):
     users = db.query(User).all()
     return [{"id": user.id, "username": user.username, "role": user.role.value} for user in users]
 
-# Get tickets for a specific user role
 @app.get("/tickets/{user_id}")
 async def get_user_tickets(user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -54,9 +48,9 @@ async def get_user_tickets(user_id: int, db: Session = Depends(get_db)):
     if user.role == UserRole.CUSTOMER:
         tickets = db.query(Ticket).filter(Ticket.customer_id == user_id).all()
     elif user.role == UserRole.BUSINESS:
-        # Business users see ALL tickets (they need to see OPEN tickets to assign themselves)
+        # business sees all tickets
         tickets = db.query(Ticket).all()
-    else:  # VENDOR
+    else:
         tickets = db.query(Ticket).filter(Ticket.vendor_id == user_id).all()
     
     return [
@@ -95,7 +89,6 @@ async def create_ticket(
     db.commit()
     db.refresh(ticket)
     
-    # Notify via WebSocket
     await manager.broadcast(json.dumps({
         "type": "new_ticket",
         "ticket_id": ticket.id,
@@ -104,8 +97,6 @@ async def create_ticket(
     }))
     
     return {"id": ticket.id, "message": "Ticket created successfully"}
-
-# Business assigns themselves to ticket
 @app.post("/tickets/{ticket_id}/assign")
 async def assign_business(
     ticket_id: int,
@@ -129,8 +120,6 @@ async def assign_business(
     }))
     
     return {"message": "Ticket assigned successfully"}
-
-# Business contacts vendor
 @app.post("/tickets/{ticket_id}/contact-vendor")
 async def contact_vendor(
     ticket_id: int,
@@ -144,11 +133,9 @@ async def contact_vendor(
     if not ticket or not vendor or vendor.role != UserRole.VENDOR:
         raise HTTPException(status_code=400, detail="Invalid ticket or vendor")
     
-    # Update ticket
     ticket.vendor_id = vendor_id
     ticket.status = TicketStatus.VENDOR_CONTACTED
     
-    # Add message
     vendor_message = Message(
         ticket_id=ticket_id,
         sender_id=ticket.business_id,
@@ -168,8 +155,6 @@ async def contact_vendor(
     }))
     
     return {"message": "Vendor contacted successfully"}
-
-# Send message between business and vendor (ongoing chat)
 @app.post("/tickets/{ticket_id}/send-message")
 async def send_message(
     ticket_id: int,
@@ -183,20 +168,17 @@ async def send_message(
     if not ticket or not sender:
         raise HTTPException(status_code=400, detail="Invalid ticket or sender")
     
-    # Determine recipient and message type based on sender role
     if sender.role == UserRole.BUSINESS:
         recipient_id = ticket.vendor_id
         message_type = "business_to_vendor"
     elif sender.role == UserRole.VENDOR:
         recipient_id = ticket.business_id
         message_type = "vendor_to_business"
-        # Update ticket status to show vendor has responded
         if ticket.status == TicketStatus.VENDOR_CONTACTED:
             ticket.status = TicketStatus.VENDOR_RESPONDED
     else:
         raise HTTPException(status_code=400, detail="Only business and vendor can send messages")
     
-    # Add message
     message = Message(
         ticket_id=ticket_id,
         sender_id=sender_id,
@@ -216,8 +198,6 @@ async def send_message(
     }))
     
     return {"message": "Message sent successfully"}
-
-# Business resolves ticket
 @app.post("/tickets/{ticket_id}/resolve")
 async def resolve_ticket(
     ticket_id: int,
@@ -229,10 +209,8 @@ async def resolve_ticket(
     if not ticket or ticket.business_id != business_id:
         raise HTTPException(status_code=400, detail="Invalid ticket or business user")
     
-    # Update ticket status
     ticket.status = TicketStatus.RESOLVED
     
-    # Add resolution message
     resolution_message = Message(
         ticket_id=ticket_id,
         sender_id=business_id,
@@ -251,8 +229,6 @@ async def resolve_ticket(
     }))
     
     return {"message": "Ticket resolved successfully"}
-
-# Get ticket messages (filtered by user role)
 @app.get("/tickets/{ticket_id}/messages")
 async def get_ticket_messages(ticket_id: int, user_id: int, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.id == user_id).first()
@@ -261,12 +237,9 @@ async def get_ticket_messages(ticket_id: int, user_id: int, db: Session = Depend
     
     messages = db.query(Message).filter(Message.ticket_id == ticket_id).all()
     
-    # Filter messages based on user role
     if user.role == UserRole.CUSTOMER:
-        # Customers only see resolution messages (business final responses)
         filtered_messages = [msg for msg in messages if msg.message_type == "resolution"]
     else:
-        # Business and vendors see all messages
         filtered_messages = messages
     
     return [
@@ -280,14 +253,11 @@ async def get_ticket_messages(ticket_id: int, user_id: int, db: Session = Depend
         }
         for message in filtered_messages
     ]
-
-# WebSocket endpoint
 @app.websocket("/ws/{user_id}")
 async def websocket_endpoint(websocket: WebSocket, user_id: int):
     await manager.connect(websocket, user_id)
     try:
         while True:
-            # Keep connection alive
             data = await websocket.receive_text()
     except WebSocketDisconnect:
         manager.disconnect(user_id)

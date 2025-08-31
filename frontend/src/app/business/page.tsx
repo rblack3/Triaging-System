@@ -61,7 +61,6 @@ export default function BusinessPage() {
     
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      console.log('WebSocket message:', data)
       if (data.type === 'new_ticket' || data.type === 'vendor_response') {
         fetchTickets()
         if (selectedTicket) {
@@ -421,7 +420,7 @@ export default function BusinessPage() {
                           value={newMessage}
                           onChange={(e) => setNewMessage(e.target.value)}
                           className="flex-1 px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500"
-                          placeholder="Type your message to the vendor..."
+                          placeholder="Message to vendor..."
                           onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                         />
                         <button
@@ -440,7 +439,7 @@ export default function BusinessPage() {
               <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
                 <Building className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Ticket</h3>
-                <p className="text-gray-500">Choose a ticket from the queue to manage and coordinate with vendors.</p>
+                <p className="text-gray-500">Select a ticket to manage.</p>
               </div>
             )}
           </div>
@@ -475,7 +474,7 @@ export default function BusinessPage() {
                   value={vendorRequest}
                   onChange={(e) => setVendorRequest(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 h-24"
-                  placeholder="Describe what you need from the vendor..."
+                  placeholder="Message to vendor..."
                 />
               </div>
             </div>
@@ -514,7 +513,7 @@ export default function BusinessPage() {
                   value={resolution}
                   onChange={(e) => setResolution(e.target.value)}
                   className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-green-500 focus:border-green-500 h-32"
-                  placeholder="Provide the resolution to send back to the customer..."
+                  placeholder="Resolution message..."
                 />
               </div>
             </div>

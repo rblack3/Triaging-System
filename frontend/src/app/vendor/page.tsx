@@ -46,7 +46,6 @@ export default function VendorPage() {
     
     ws.onmessage = (event) => {
       const data = JSON.parse(event.data)
-      console.log('Vendor WebSocket message:', data)
       if (data.type === 'vendor_contacted') {
         fetchTickets()
       }
@@ -222,7 +221,7 @@ export default function VendorPage() {
 
                       {ticket.status === 'vendor_contacted' && (
                         <div className="mt-2 text-xs bg-yellow-50 text-yellow-700 p-2 rounded border">
-                          ⏰ Response needed
+                          Response needed
                         </div>
                       )}
                     </div>
@@ -301,7 +300,7 @@ export default function VendorPage() {
                               value={newMessage}
                               onChange={(e) => setNewMessage(e.target.value)}
                               className="flex-1 px-4 py-3 border border-amber-300 rounded-lg focus:ring-2 focus:ring-amber-500 focus:border-amber-500 bg-white"
-                              placeholder="Type your message to the business..."
+                              placeholder="Reply to business..."
                               onKeyPress={(e) => e.key === 'Enter' && sendMessage()}
                             />
                             <button
@@ -313,9 +312,7 @@ export default function VendorPage() {
                               <span>{sendingMessage ? 'Sending...' : 'Send'}</span>
                             </button>
                           </div>
-                          <p className="text-xs text-amber-700">
-                            💡 You can send multiple messages back and forth with the business team
-                          </p>
+
                         </div>
                       </div>
                     )}
@@ -362,7 +359,7 @@ export default function VendorPage() {
               <div className="bg-white rounded-lg shadow-sm border p-12 text-center">
                 <AlertTriangle className="w-12 h-12 text-gray-400 mx-auto mb-4" />
                 <h3 className="text-lg font-semibold text-gray-900 mb-2">Select a Request</h3>
-                <p className="text-gray-500">Choose a vendor request from the list to review and respond.</p>
+                <p className="text-gray-500">Select a request to respond.</p>
               </div>
             )}
           </div>
