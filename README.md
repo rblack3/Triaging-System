@@ -1,4 +1,4 @@
-# Triaging System
+# Multi-Role Ticketing System
 
 A streamlined communication platform connecting customers, businesses, and vendors through an intelligent ticketing workflow.
 
